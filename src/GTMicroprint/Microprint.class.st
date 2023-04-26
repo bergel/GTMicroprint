@@ -42,6 +42,8 @@ Microprint >> buildFromString: aString container: container line: lineIndex [
 				portion := MicroprintPortion new 
 								lineNumber: lineIndex; 
 								fileContent: fileContent.
+				event currentTarget border: (BlBorder paint: Color red width: 4).
+				
 				event currentTarget phlow spawnObject: portion ].
 	container addChild: box
 	 
