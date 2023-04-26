@@ -2,7 +2,8 @@ Class {
 	#name : #Microprint,
 	#superclass : #Object,
 	#instVars : [
-		'rules'
+		'rules',
+		'fileContent'
 	],
 	#category : #'GTMicroprint-Core'
 }
@@ -19,7 +20,8 @@ Microprint >> buildFromString: aString [
 	container := (BlElement new)
 		size: 1000 @ 2000;
 		background: Color veryLightGray lighter lighter.
-	aString lines doWithIndex: [:l :i |
+	fileContent := aString.
+	fileContent lines doWithIndex: [:l :i |
 		self buildFromString: l container: container line: i
 	].
 	^ container asScalableElement
@@ -36,7 +38,11 @@ Microprint >> buildFromString: aString container: container line: lineIndex [
 				background: (self colorOf: trimedString);
 				relocate: (nbOfSeparatorChars * 10) @ (lineIndex * 10 - 2).
 	box when: BlClickEvent do: [ :event | 
-				event currentTarget phlow spawnObject: trimedString ].
+				| portion |
+				portion := MicroprintPortion new 
+								lineNumber: lineIndex; 
+								fileContent: fileContent.
+				event currentTarget phlow spawnObject: portion ].
 	container addChild: box
 	 
 ]
@@ -74,7 +80,11 @@ Microprint >> example02 [
 		rule: '#.*' color: Color green;
 		rule: 'name.*' color: Color yellow;
 		rule: '- name.*' color: Color yellow;
-		buildFromFilename: '/Users/alexandrebergel/Desktop/GT/example_workflow.yaml'
+		rule: 'timeout.*' color: Color red;
+		rule: 'matrix.*\:' color: Color red;
+		rule: 'uses\:' color: Color blue;
+		
+		buildFromFilename: '/Users/alexandrebergel/Desktop/GT/example_workflow2.yaml'
 
 ]
 
